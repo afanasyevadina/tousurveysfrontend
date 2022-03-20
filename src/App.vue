@@ -1,32 +1,75 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <nav class="navbar navbar-expand navbar-light bg-white shadow">
+      <div class="container">
+        <router-link class="navbar-brand" to="/"> ToU Surveys </router-link>
+        <div v-if="user">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown">
+              <a
+                id="navbarDropdown"
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                {{ user.name }}
+              </a>
+
+              <div
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdown"
+              >
+                <a class="dropdown-item" href="#" @click.prevent="logout"> Выход </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
+<script>
+import {mapGetters} from 'vuex'
+
+export default {
+  computed: mapGetters(['user']),
+  methods: {
+    logout: function() {
+      this.$store.commit('logout')
+      this.$router.push('/login')
+    },
+  },
+  created() {
+    this.$store.commit('restoreUser')
+  }
+}
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+.loader {
+  width: 70px;
+  height: 70px;
+  border: 5px solid rgb(179, 179, 179);
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: rotate 1s linear infinite;
 }
-
-nav {
-  padding: 30px;
+.loader-sm {
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgb(179, 179, 179);
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: rotate 1s linear infinite;
 }
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
